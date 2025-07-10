@@ -5,17 +5,18 @@ from PIL import Image # importar la libreria PIL para manejar imagenes
 icono = Image.open("multimedia/icono.png") # abrir la imagen de streamlit
 st.set_page_config(page_title="App Inge Carlos",
                    page_icon= icono, #icono de la app
-                   layout="wide" # configurar el layout de la app https://docs.streamlit.io/library/api-reference/layout/st.set_page_config
+                   layout="wide",
+                   initial_sidebar_state="collapsed" # menu contraido https://docs.streamlit.io/library/api-reference/layout/st.sidebar
                    ) # configurar la pagina de la app https://docs.streamlit.io/library/api-reference/layout/st.set_page_config
 
 
 #function to run the app
 def main():
      
-    st.title("Hacer Inputs con números")
-    st.write("Esta app permite hacer inputs con números y mostrar el resultado en pantalla.")
-    numero = st.number_input("Ingrese un número", min_value=0, max_value=100, value=50, step=1) # crear un input de tipo numero https://docs.streamlit.io/library/api-reference/widgets/st.number_input
-    st.write(f"El número ingresado es: {numero}") # mostrar el numero ingresado en pantalla
+    st.title("Dashboard del Inge Carlos") # titulo de la app https://docs.streamlit.io/library/api-reference/layout/st.title
+    
+    #menu de navegacion
+    st.sidebar.header("Navegacion") # encabezado del menu de navegacion https://docs.streamlit.io/library/api-reference/layout/st.sidebar.header
   
     
 # validate the app
