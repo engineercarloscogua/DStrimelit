@@ -19,6 +19,18 @@ def main():
     st.header(f" encabezado Hola {nombre}, estas aprendiendo bien")  #f-string para insertar variables en el texto https://docs.streamlit.io/develop/api-reference/text/st.header
     st.subheader(f" subencabezado Hola {nombre}, estas aprendiendo bien")  #f-string para insertar variables en el texto https://docs.streamlit.io/develop/api-reference/text/st.subheader
     st.title(f" titulo Hola {nombre}, estas aprendiendo bien")  #f-string para
+    
+# ---------------MENSAJES DE ALERTA Y ERROR -----------------------------------
+    st.title("--MENSAJES DE ALERTA Y ERROR--")
+    st.success("Mensaje de éxito")  #mensaje de éxito https://docs.streamlit.io/develop/api-reference/text/st.success
+    st.info("Mensaje de información")  #mensaje de información https://docs.streamlit.io/develop/api-reference/text/st.info
+    st.warning("Mensaje de advertencia")  #mensaje de advertencia https://docs.streamlit.io/develop/api-reference/text/st.warning
+    st.error("Mensaje de error")  #mensaje de error https://docs.streamlit.io/develop/api-reference/text/st.error
+    st.exception("Mensaje de excepción")  #mensaje de excepción https://docs.streamlit.io/develop/api-reference/text/st.exception
+    st.help("Mensaje de ayuda")  #mensaje de ayuda https://docs.streamlit.io/develop/api-reference/text/st.help 
+    st.balloons()  #mensaje de globos https://docs.streamlit.io/develop/api-reference/text/st.balloons
+    st.snow()  #mensaje de nieve https://docs.streamlit.io/develop/api-reference/text/st.snow
+    st.spinner("Cargando...")  #mensaje de cargando https://docs.streamlit.io/develop/api-reference/text/st.spinner 
 # validate the app
 if __name__ == "__main__":
     main() # run the app
