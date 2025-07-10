@@ -31,6 +31,16 @@ def main():
     #mostrar el valor seleccionado
     st.write(f'Has seleccionado: {valor}')
     
+    # ===Select Slider ===
+    st.title("Select Slider") # titulo de la app
+    opciones3 = st.select_slider(
+        'Selecciona su nivel de satisfacción',
+        options=['Muy bajo', 'Bajo', 'Medio', 'Alto', 'Muy alto'],
+        value='Medio' # valor por defecto       
+    )
+    st.write(f'Has seleccionado: {opciones3}')
+    
+    
 # validate the app
 if __name__ == "__main__": # esto asegura que el código se ejecute solo si este archivo es el principal https://docs.streamlit.io/library/api-reference/utilities/st.cache_data
     main() # run the app # esta es la funcion principal que se ejecuta al iniciar la app https://docs.streamlit.io/library/api-reference/utilities/st.main
