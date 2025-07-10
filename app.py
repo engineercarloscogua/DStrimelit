@@ -18,10 +18,25 @@ def main():
         st.dataframe(df)# muestra dataframe en la app
         #---- mostrar primeros 5 registros del dataframe
         st.subheader("Primeros 5 registros")       
-        st.dataframe(df.head())       
+        st.dataframe(df.head())              
     else:
         print("Error al consultar la API:", response.status_code)
+        
+    # ======Mostrar datos Json en la app
+    st.subheader("Datos JSON")  
+    st.json({'nombre': 'Carlos'}) # muestra un objeto JSON en la app https://docs.streamlit.io/library/api-reference/data/st.json
+    
+    # ====== Mostrar codigos de programacion
+    st.subheader("Codigo de programacion")  
+    
+    codigo = """
+        print("Hola, mundo!")
+        for i in range(5):
+            print(i)
+    """
+    st.code(codigo, language='python') #muestra el codigo en la app https://docs.streamlit.io/library/api-reference/data/st.code
+    
 # validate the app
-if __name__ == "__main__":
-    main() # run the app
+if __name__ == "__main__": # esto asegura que el código se ejecute solo si este archivo es el principal https://docs.streamlit.io/library/api-reference/utilities/st.cache_data
+    main() # run the app # esta es la funcion principal que se ejecuta al iniciar la app https://docs.streamlit.io/library/api-reference/utilities/st.main
     
