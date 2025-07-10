@@ -5,15 +5,15 @@ from PIL import Image #importar la libreria PIL para manejar imagenes pill es un
 
 #function to run the app
 def main(): 
-    # 1. ====Agregando Selectbox ===
-    st.title("Manejo de multimedia") # titulo de la app
-    img = Image.open("multimedia/imagen.png") # abrir la imagen con PIL
-    st.image(img, caption="Imagen de ejemplo", use_container_width = True) # mostrar la imagen en la app con un caption y ajustando el ancho de la columna https://docs.streamlit.io/library/api-reference/layout/st.image
     
-    #=====Mostrar imagen radom de internet====
-    st.subheader("Imagen aleatoria de internet") # subtitulo de la seccion
-    st.image("https://picsum.photos/150/150", caption="Imagen aleatoria de internet", use_container_width = True) # mostrar una imagen aleatoria de internet con un caption y ajustando el ancho de la columna https://docs.streamlit.io/library/api-reference/layout/st.image
+    st.title("Videos")
+    with open("multimedia/video.mp4", "rb") as file: # abre el archivo de video en modo lectura binaria https://docs.python.org/3/library/functions.html#open
+       st.video(file.read(), start_time=0) # lee el archivo los muestra en el tiempo 0 segundos https://docs.streamlit.io/library/api-reference/media/st.video
     
+    # ====Audio ====
+    st.title("Audio")
+    with open("multimedia/audio.mp3", "rb") as file: # abre el archivo de audio en modo lectura binaria https://docs.python.org/3/library/functions.html#open
+        st.audio(file.read(), format="audio/mp3") # lee el archivo y lo muestra en formato mp3 https://docs.streamlit.io/library/api-reference/media/st.audio
     
 # validate the app
 if __name__ == "__main__": # esto asegura que el código se ejecute solo si este archivo es el principal https://docs.streamlit.io/library/api-reference/utilities/st.cache_data
