@@ -7,6 +7,13 @@ __pycache__/
 *.so
 #entorno virtual
 env/
+# basura
+Documentation/~$structivo.docx/
+Documentation/~WRL0005.tmp/
+
+
+~WRL0005.tmp/
+
 # Distribution / packaging
 .Python
 build/
