@@ -22,21 +22,32 @@ def main():
     df = pd.read_excel("mer_con_neg_2018_2024.xlsx")
     st.dataframe(df) # mostrar el dataframe en la app https://docs.streamlit.io/library/api-reference/data/st.dataframe
     
-    # =====Agrupación por NOV ====
+    #========diagrama de pastel
+    # =====Agrupación por tipo de documento ======
     st.header("Agrupación por tipo de documento") # encabezado de la seccion de agrupacion por NOV    
     # Agrupar por tip_doc y contar cuántos registros hay por cada uno en un nuevo df
     df_nov = df.groupby("tip_doc").size().reset_index(name="total") #reset index para que el resultado sea un dataframe y no una serie, name = "total" para renombrar la columna de conteo https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.groupby.html
-    st.dataframe(df_nov) # mostrar el dataframe agrupado en la app
-    
+    st.dataframe(df_nov) # mostrar el dataframe agrupado en la app    
     # ====Crear la gráfica de pastel=====
     fig = px.pie(df_nov, 
                 values="total", # valores a graficar
                 names="tip_doc", # nombres de las categorías
                 title="Total por Novedades", # título de la gráfica
                 color_discrete_sequence=px.colors.qualitative.Pastel)# https://plotly.com/python/pie-charts/
-
-    # Mostrar la gráfica en Streamlit
     st.plotly_chart(fig, use_container_width=True)
+   
+    #====diagrama barras con media  de novedades x municipio===
+    st.header("Diagrama de barras con media") # encabezado de la seccion de diagrama de barras
+    df_avg = df.groupby("nov")["mun"].mean().reset_index() # agrupar por nov y calcular la media de las columnas numéricas, reset index para que el resultado sea un dataframe y no una serie
+    #---------Diagrama de barras con la media de novedades por municipio----------
+    fig2 = px.bar(df_avg, 
+                x="nov", # eje x
+                y="mun", # eje y
+                title="Media de Novedades por Municipio", # título de la gráfica
+                color="mun", # color de las barras 
+                ) # escala de colores https://plotly.com/python/bar-charts/
+    # Mostrar la gráfica en Streamlit
+    st.plotly_chart(fig2, use_container_width=True)
 # validate the app
 if __name__ == "__main__": # esto asegura que el código se ejecute solo si este archivo es el principal https://docs.streamlit.io/library/api-reference/utilities/st.cache_data
     main() # run the app # esta es la funcion principal que se ejecuta al iniciar la app https://docs.streamlit.io/library/api-reference/utilities/st.main
