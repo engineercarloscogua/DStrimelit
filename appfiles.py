@@ -24,7 +24,7 @@ def leer_pdf(file):
 def main(): #  Función principal del script
     st.title("Carga de archivos")    
     # =====MENÚ DE SELECCIÓN DE ARCHIVOS DEL NAVEGADOR VERTICAL======
-    menu = ["Imagen", "PDF","EXCEL", "DOCX"] # Lista de tipos de archivos
+    menu = ["Imagen","EXCEL", "DOCUMENTOS"] # Lista de tipos de archivos
     #sidebar.selectbox permite al usuario seleccionar un tipo de archivo en un menú desplegable
     eleccion = st.sidebar.selectbox("Selecciona el tipo de archivo", menu)# variable para almacenar la selección del usuario
     
@@ -66,17 +66,35 @@ def main(): #  Función principal del script
                 st.error("Tipo de archivo no soportado. Por favor, sube un archivo Excel o CSV.") 
             st.dataframe(df) # Muestra el DataFrame en la aplicación 
     
-    """    
-    #=====Validación de PDF ===========
-    elif eleccion == "PDF": # Si el usuario selecciona "PDF"
-        st.subheader("Cargar un archivo PDF") # Subtítulo para la sección de PDF
-        archivo_pdf = st.file_uploader("Sube tu PDF", type=["pdf"]) # Permite al usuario subir un archivo PDF
+      
+    #=====Validación de documentos ===========
+    elif eleccion == "DOCUMENTOS": # Si el usuario selecciona "DOCUMENTOS"
+        st.subheader("Cargar un documento") # Subtítulo para la sección de PDF
+        archivo_doc = st.file_uploader("Sube tu documento", type=["pdf", "docx", "txt"]) # Permite al usuario subir un archivo PDF
         
-    #=====Validación de DOCX ===========
-    elif eleccion == "DOCX": # Si el usuario selecciona "DOCX"
-        st.subheader("Cargar un archivo DOCX") # Subtítulo para la sección
-    """
-    
+        #crea el boton y valida para cargar el archivo
+        if st.button("Cargar documento"): # Si el usuario hace clic en el botón "            
+            # Validación para asegurarse de que se ha subido un archivo
+            if archivo_doc is not None: # Si se ha subido un archivo    
+                detalle_archivo_doc = {"nombre_archivo": archivo_doc.name, # Nombre del archivo
+                                    "tipo_archivo": archivo_doc.type, # Tipo de archivo
+                                    "tamaño_archivo": archivo_doc.size}
+                st.write(detalle_archivo_doc) # Muestra los detalles del archivo subido
+                
+                #valida el tipo de archivo y extrae el texto
+                if archivo_doc.type == "application/pdf": # Si el archivo es un PDF
+                    texto_pdf = leer_pdf(archivo_doc) # Llama a la función para leer el PDF
+                    st.text_area("Contenido del PDF", value=texto_pdf, height=300)
+                elif archivo_doc.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document": # Si el archivo es un DOCX
+                    texto_docx = docx2txt.process(archivo_doc) # Llama a la función para leer el DOCX
+                    st.text_area("Contenido del DOCX", value=texto_docx, height=300)
+                elif archivo_doc.type == "text/plain": # Si el archivo es un TXT    
+                    texto_txt = archivo_doc.read().decode("utf-8") # Lee el archivo TXT
+                    st.text_area("Contenido del TXT", value=texto_txt, height=300)
+                else:
+                    st.error("Tipo de archivo no soportado. Por favor, sube un archivo PDF, DOCX o TXT.")
+            else: # Si no se ha subido un archivo
+                st.error("Por favor, sube un archivo válido.")   
     
     
 if __name__ == "__main__": # Punto de entrada del script
