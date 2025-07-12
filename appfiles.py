@@ -3,6 +3,7 @@ import pandas as pd # importando la librería Pandas para manejar datos
 from PIL import Image # importando la librería PIL para manejar imágenes
 import docx2txt # importando la librería docx2txt para manejar archivos DOCX
 from PyPDF2 import PdfReader # importando la librería PyPDF2 para manejar archivos PDF
+import os # importando la librería os para manejar el sistema de archivos
 
 #  ///////////////////////FUNCONES PARA GARGES/////////////////////
 @st.cache_data # Decorador para cachear los datos y mejorar el rendimiento
@@ -18,7 +19,18 @@ def leer_pdf(file):
     for i in range(count): # Iterando sobre cada página  
         pagina = pdf_reader.pages[i] # Obteniendo la página
         todo_el_texto += pagina.extract_text() # Extrayendo el texto de la página
-    return todo_el_texto # Retornando el texto extraído    
+    return todo_el_texto # Retornando el texto extraído  
+ 
+# =============guardar archivos dentro del proyecto ==============
+def guardar_archivo(uploadedfile):
+    # Extrae solo el nombre del archivo sin la ruta del directorio
+    filename = os.path.basename(uploadedfile.name) # hhtps://docs.python.org/3/library/os.path.html#os.path.basename    
+    # Crea el directorio temp si no existe
+    os.makedirs("temp", exist_ok=True) # existt_ok =True evita un error si el directorio ya existe http://docs.python.org/3/library/os.html#os.makedirs
+    # Guarda el archivo en el directorio temp
+    with open(os.path.join("temp", filename), "wb") as f: # f escribe el archivo en modo binario, os.path.join combina el directorio y el nombre del archivo
+        f.write(uploadedfile.getbuffer()) #getbuffer() obtiene el contenido del archivo subido http://docs.streamlit.io/library/api-reference/utilities/st.file_uploader#st.file_uploader.getbuffer    
+    return st.success(f"El archivo {filename} se ha guardado correctamente") # Mensaje de éxito al guardar el archivo
 
 # ////////////////////////////////FUNCONES PARA GARGES////////////////////////
 def main(): #  Función principal del script
@@ -41,6 +53,7 @@ def main(): #  Función principal del script
             st.write(detalle_archivo) # Muestra los detalles del archivo subido
             # Muestra la imagen cargada con un título y ajusta el ancho de la columna
             st.image(cargar_archivo(archivo_imagen), caption="Imagen cargada", use_container_width=True) 
+            guardar_archivo(archivo_imagen) # Llama a la función para guardar el archivo subido
    
     #=====CARGUE DE ARCHIVOS EXCEL ===========
     elif eleccion == "EXCEL": # Si el usuario selecciona "EXCEL"
@@ -65,6 +78,7 @@ def main(): #  Función principal del script
                 df = pd.DataFrame() # Si el tipo de archivo no es reconocido, crea un DataFrame vacío
                 st.error("Tipo de archivo no soportado. Por favor, sube un archivo Excel o CSV.") 
             st.dataframe(df) # Muestra el DataFrame en la aplicación 
+            guardar_archivo(archivo_excel) # Llama a la función para guardar el archivo subido
     
       
     #=====Validación de documentos ===========
@@ -83,7 +97,7 @@ def main(): #  Función principal del script
                 
                 #valida el tipo de archivo y extrae el texto
                 if archivo_doc.type == "application/pdf": # Si el archivo es un PDF
-                    texto_pdf = leer_pdf(archivo_doc) # Llama a la función para leer el PDF
+                    texto_pdf = leer_pdf(archivo_doc) # Llama a la función para leer el PDF que hicimos al inicio
                     st.text_area("Contenido del PDF", value=texto_pdf, height=300)
                 elif archivo_doc.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document": # Si el archivo es un DOCX
                     texto_docx = docx2txt.process(archivo_doc) # Llama a la función para leer el DOCX
@@ -91,8 +105,11 @@ def main(): #  Función principal del script
                 elif archivo_doc.type == "text/plain": # Si el archivo es un TXT    
                     texto_txt = archivo_doc.read().decode("utf-8") # Lee el archivo TXT
                     st.text_area("Contenido del TXT", value=texto_txt, height=300)
+                
                 else:
                     st.error("Tipo de archivo no soportado. Por favor, sube un archivo PDF, DOCX o TXT.")
+                # Muestra el contenido del archivo subido en un área de texto
+                guardar_archivo(archivo_doc) # Llama a la función para guardar el archivo subido
             else: # Si no se ha subido un archivo
                 st.error("Por favor, sube un archivo válido.")   
     
