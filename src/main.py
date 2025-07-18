@@ -2,8 +2,9 @@ import streamlit as st # Importing Streamlit for building the web application
 from modulos.p1 import dashboard # Importing the title function from the first page module
 from modulos.changes import changes_files # Importing the changes_files function from the changes module
 from modulos.ingresos import ingresos # Importing the ingresos function from the ingresos module
-from modulos.negados import negados # Importing the negados function from the negados module  
+from modulos.negados import negados # Importing the negados function from the negados module
 from modulos.retiros import retiros # Importing the retiros function from the retiros module
+
 
 from PIL import Image # Importing the Image class from the PIL library to handle images
 

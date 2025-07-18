@@ -5,6 +5,8 @@ import streamlit as st               # Streamlit: para crear interfaces web fác
 import pandas as pd                 # pandas: para manejar y analizar datos tabulares
 import os                           # os: para trabajar con archivos y rutas del sistema operativo
 from graficas.barras import plot_bar_chart  # Función personalizada para generar un gráfico de barras
+#from graficas.pastel import plot_pie_chart
+
 
 # ===============================
 # FUNCIÓN PARA CARGAR EL ARCHIVO
@@ -137,3 +139,5 @@ def ingresos():
     else:
         # Si no se ha subido ningún archivo
         st.warning("Aún no hay archivos cargados. Por favor, sube un archivo Excel para continuar.")
+
+
