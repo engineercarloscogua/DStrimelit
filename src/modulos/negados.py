@@ -13,32 +13,14 @@ from graficas.dispersion import ScatterChart  # Clase para generar gráficos de 
 from graficas.cajas import BoxChart     # Clase para generar gráficos de cajas y bigotes
 from graficas.calor import HeatmapChart # Clase para generar mapas de calor
 from graficas.barras import  plot_bar_chart #nerar gráficos de barras
+from processing.upload_data import FileLoader  # Clase para cargar y validar archivos Excel o CSV
 
-# ===============================
-# FUNCIÓN PARA CARGAR EL ARCHIVO
-# ===============================
-
-# Esta función carga un archivo Excel o CSV y lo convierte en un DataFrame de pandas.
-@st.cache_data # Decorador para almacenar en caché los resultados de la función
-def load_file(archivo_excel):
-    """Carga un archivo Excel o CSV y lo convierte en una tabla (DataFrame)"""
-    extension = os.path.splitext(archivo_excel.name)[1].lower()
-    # Verifica la extensión del archivo y carga el DataFrame correspondiente
-    if extension in ['.xlsx', '.xls']:
-        return pd.read_excel(archivo_excel, engine='openpyxl')
-    elif extension == '.csv':
-        try:
-            return pd.read_csv(archivo_excel, encoding='utf-8')
-        except UnicodeDecodeError:
-            st.error("Error de codificación en el archivo CSV. Intenta con una codificación diferente.")
-            return pd.DataFrame()
-    return pd.DataFrame()
-
-# ==============================
-# FUNCIÓN PRINCIPAL DE LA APP
-# ==============================
 def negados():
+    """Función principal de la aplicación Streamlit para análisis de datos."""
     st.title("Análisis Automático de Datos - Gráficos Múltiples")
+
+    # Instancia del cargador de archivos
+    file_loader = FileLoader()
 
     # Botón para limpiar la caché
     if st.button("Limpiar caché"):
@@ -47,17 +29,22 @@ def negados():
 
     # Carga del archivo
     archivo_excel = st.file_uploader("Sube tu archivo Excel o CSV", type=["csv", "xlsx", "xls"])
-
+    
     if archivo_excel is not None:
-        df = load_file(archivo_excel)
-
+        # Cargar el archivo usando la clase FileLoader
+        df = file_loader.load_file(archivo_excel)
+        
         # Mostrar detalles del archivo
-        detalle_archivo = {
-            "nombre_archivo": archivo_excel.name,
-            "tamaño_archivo": f"{archivo_excel.size / 1024:.2f} KB"
-        }
-        st.write("Detalles del archivo:", detalle_archivo)
-        st.write("Vista previa de los datos (primeras 5 filas):", df.head())
+        detalles = file_loader.get_file_details(archivo_excel)
+        if detalles:
+            st.write("Detalles del archivo:", detalles)
+        
+        # Mostrar vista previa de los datos
+        if not df.empty:
+            st.write("Vista previa de los datos (primeras 5 filas):", df.head())
+        else:
+            st.error("El archivo cargado está vacío o no contiene datos válidos.")
+            return
 
         # Validar columnas
         columnas_numericas = df.select_dtypes(include=['number']).columns.tolist()
@@ -73,12 +60,6 @@ def negados():
         # Slider para número de registros
         max_records = len(df)
         limit = st.slider("Selecciona el número de registros", 0, max_records, min(200, max_records))
-
-        # Validaciones generales
-        if df.empty:
-            st.error("El archivo cargado está vacío o no contiene datos válidos.")
-            return
-
         df_limited = df.head(limit) if limit > 0 else df
 
         # Secciones contraíbles para cada gráfico con botones independientes
